@@ -12,7 +12,7 @@ Propose:
 
 ### 1.1 Python
 
-#### Ubuntu Debian e derivatives (if you don't already have the native)
+#### Ubuntu, Debian and derivatives (if you don't already have the native)
 
 >sudo apt-get update<br>
 >sudo apt-get install python3.5<br>
@@ -34,12 +34,17 @@ Site test (https://apirest-projeto.web.app/)
 
 ## 3 Start prog
 
+
 - Open the repository and run the python program rest.py
  
  > python3 rest.py<br>
  
-- Follow the instructions in the prompt to perform the operations, and check the results most visibly by updating the json by clicking on the update button at the top of the page
- 
+- Follow the instructions on the prompt to perform the operations;
+
+- Open the site shows up in section 2;
+
+- And finally check the results in a more visible way by updating the json by clicking the update button at the top of the page
+
  
 ## 4 Backup
 
