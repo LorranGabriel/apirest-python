@@ -1,4 +1,4 @@
-# apirest-python
+# APIrest Pyrebase Webservice for Firebase
 
 ## Objective 
 
