@@ -1,6 +1,8 @@
 import pyrebase
 import json
 from collections import OrderedDict
+import os
+
 
 config = {
   "apiKey": "AIzaSyBA6toEeoJ4p3DTU1pEed1RFp6v0pAizdc",
@@ -9,39 +11,167 @@ config = {
   "storageBucket": "apirest-projeto.appspot.com",
   "serviceAccount": "apirest-projeto-firebase-adminsdk-lnlj2-26e8336c87.json"
 }
-
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
-data = {"id": "0","nome":"Garra robotica para servos 9g","descricao": "Garra robotica impressa em ABR aproximadamente 15cm, nao acompanha motores","estoque": 20,"preco":20.00}
-db.child("produto").child("robotica").push(data)
+def get(numid):
+	flag = True
+	if numid == "":
+		produtos = db.child("/").get()
+		print (json.dumps(produtos.val(), indent=4))
+	else:
+		produtos = db.child("produto").get()
+		dic = produtos.val()
+		for i in dic:
+			if dic[i]["id"] == numid:
+				print (json.dumps(dic[i], indent=4))
+				print("\n")
+				flag = False
+		if flag:
+			print("\n")
+			print("Produto inexistente")
+			print("\n")
 
-data = {"id": "1","nome":"Plataforma robótica com servos 9g","descricao": "Plataforma impressa em ABR acompanhada de dois servo motores","estoque": 10,"preco":40.00}
-db.child("produto").child("robotica").push(data)
-
-data = {"id": "2","nome":"Mesa linear sem motores","descricao": "Mesa linear impressa em ABR aproximadamente 10cm com um fusos giratorio de aluminio, nao acompanha motores","estoque": 10,"preco":50.00}
-db.child("produto").child("robotica").push(data)
-
-data = {"id": "3","nome":"Kit de montagem open source","descricao": "Kit de montagem open source, acompanha: 1 arduino, uma mini plataforma robotica para micro servos 9g, 2 micro servos, e 1 bateria","estoque": 5,"preco":100.00}
-db.child("produto").child("robotica").push(data)
-
-data = {"id": "4","nome":"Motor de Passo NEMA ","descricao": "Motor de passos nema, original","estoque": 20,"preco":120.00}
-db.child("produto").child("robotica").push(data)
-
-data = {"id": "5","nome":"Raspberry pi 4","descricao": "Placa Raspberry pi 4 original, acompanha cabo de fonte","estoque": 20,"preco":400.00}
-db.child("produto").child("sistemas_embarcados").push(data)
-
-data = {"id": "6","nome":"Arduino Mega","descricao": "Placa Arduino mega original, acompanha cabo de fonte","estoque": 50,"preco":90.00}
-db.child("produto").child("sistemas_embarcados").push(data)
-
-data = {"id": "7","nome":"Arduino Uno","descricao": "Placa Arduino Uno original, acompanha cabo de fonte","estoque": 32,"preco":60.00}
-db.child("produto").child("sistemas_embarcados").push(data)
-
-data = {"id": "8","nome":"Panda Board","descricao": "Placa Panda Board original, acompanha cabo de fonte","estoque": 50,"preco":20.00}
-db.child("produto").child("sistemas_embarcados").push(data)
+def post(nome, desc, qtd, valor, link):
+	num_id = db.child("num_Produtos/").get()
+	print(num_id.val())
+	data = {"id": num_id.val(),"nome":nome,"descricao": desc,"estoque": qtd,"preco":valor,"link":link}
+	db.child("produto").push(data)
+	db.child("/").update({"num_Produtos": num_id.val()+1})
+	print ("Elemento Adicionado com sucesso")
+	print("\n")
 
 
+def remove(numid):
+	flag = True
 
-users = db.child("produto").get()
+	if numid == "":
+		print("insira um id contido no banco")
+	else:
+		produtos = db.child("produto").get()
+		dic = produtos.val()
+		for i in dic:
+			if dic[i]["id"] == numid:
+				db.child("produto").child(i).remove()
+				print ("Elemento removido com sucesso")
+				print("\n")
+				flag = False
+		if flag:
+			print("\n")
 
-print (json.dumps(users.val(), indent=4))
+			print("Produto inexistente")
+			print("\n")
+
+
+def put(numid,nome, desc, qtd, valor, link):
+	flag = True
+
+	if numid == "":
+		print("insira um id contido no banco")
+	else:
+		produtos = db.child("produto").get()
+		dic = produtos.val()
+		for i in dic:
+			if dic[i]["id"] == numid:
+				db.child("produto").child(i).update({"id": numid,"nome":nome,"descricao": desc,"estoque": qtd,"preco":valor,"link":link})
+				print("Elemento Atualizado com sucesso")
+				print("\n")
+				flag = False
+		if flag:
+			print("\n")
+			print("Produto inexistente")
+			print("\n")
+
+
+def main():
+	os.system('clear') or None
+
+	print("--------------------- MENU ---------------------")
+	print("\n")
+	print("Escolha a opção que desejar:")
+	print("\n")
+	print("[1] Listar produtos")
+	print("[2] Listar produto")
+	print("[3] Inserir produto")
+	print("[4] Atualizar Produto")
+	print("[5] Remover Produto")
+	print("\n")
+
+	resposta = int(input("Informe a operação: "))
+	os.system('clear') or None
+
+	if resposta == 1:
+		get("");
+		resposta = input("Deseja realizar outra operação <s/n>:  ")
+		reposta = resposta.upper()
+		if reposta == "S":
+			os.system('clear') or None
+			return main()
+		else:
+			quit()
+	
+	elif resposta == 2:
+		numid = int(input("Informe o numero do id do produto que deseja consultar: "))
+		get(numid)
+		resposta = input("Deseja realizar outra operação <s/n>:  ")
+		reposta = resposta.upper()
+		if reposta == "S":
+			os.system('clear') or None
+			return main()
+		else:
+			quit()
+			
+	elif resposta == 3:
+		print("Complete os dados, para poder inserir o produto")
+		print("\n")
+		nome = input("Informe o nome para o produto:  ")
+		descricao = input("Informe a descricao do produto:  ")
+		qtd = int(input("Informe a quantidade em estoque:  "))
+		valor = int(input("Informe o valor para o produto:  "))
+		link = input("Informe o link para a imagem do produto na web:  ")
+		if(qtd < 0 or valor < 0):
+			print("Entradas incorretas")	
+		else:
+			post(nome,descricao,qtd,valor,link)
+
+		resposta = input("Deseja realizar outra operação <s/n>:  ")
+		reposta = resposta.upper()
+		if reposta == "S":
+			os.system('clear') or None
+			return main()
+		else:
+			quit()
+	
+	elif resposta == 4:
+		print("Complete os dados, para poder alterar o produto")
+		print("\n")
+		numid = int(input("Informe o numero do id do produto que deseja alterar: "))
+		nome = input("Informe o nome para o produto:  ")
+		descricao = input("Informe a descricao do produto:  ")
+		qtd = int(input("Informe a quantidade em estoque:  "))
+		valor = int(input("Informe o valor para o produto:  "))
+		link = input("Informe o link para a imagem do produto na web:  ")
+		if(qtd < 0 or valor < 0):
+			print("Entradas incorretas")	
+		else:
+			put(numid,nome,descricao,qtd,valor,link)
+		resposta = input("Deseja realizar outra operação <s/n>:  ")
+		reposta = resposta.upper()
+		if reposta == "S":
+			os.system('clear') or None
+			return main()
+		else:
+			quit()
+
+	elif resposta == 5:
+		numid = int(input("Informe o numero do id do produto que remover: "))
+		remove(numid)
+		resposta = input("Deseja realizar outra operação <s/n>:  ")
+		reposta = resposta.upper()
+		if reposta == "S":
+			os.system('clear') or None
+			return main()
+		else:
+			quit()
+
+main()
