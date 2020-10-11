@@ -17,11 +17,13 @@ Propose:
 >sudo apt-get update<br>
 >sudo apt-get install python3.5<br>
 
+
 ### 1.2 Pyrebase
 
 >pip install pyrebase
 
 Documentation (https://github.com/thisbejim/Pyrebase)
+
 
 ## 2 Open URL Test
 
@@ -29,8 +31,25 @@ Documentation (https://github.com/thisbejim/Pyrebase)
 
 Site test (https://apirest-projeto.web.app/)
 
+
 ## 3 Start prog
 
 - Open the repository and run the python program rest.py
  
  > python3 rest.py<br>
+ 
+- Follow the instructions in the prompt to perform the operations, and check the results most visibly by updating the json by clicking on the update button at the top of the page
+ 
+ 
+## 4 Backup
+
+- After many operations the bank may have lost a lot of information, run the restoration program to return to the origin
+
+ > python3 bkp_banco.py<br>
+
+
+## 5 References
+
+- Firebase APIs (https://firebase.google.com/docs/database/rest/start)
+- Lib Pyrebase (https://github.com/thisbejim/Pyrebase)
+
